@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极简番茄钟</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: #2d2d2d;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        #timer {
+            font-size: 80px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff6347; /* 番茄红 */
+        }
+        button {
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #e5533d;
+            transform: scale(1.05);
+        }
+        #status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="timer">25:00</div>
+        <button onclick="startTimer()">开始</button>
+        <button onclick="resetTimer()">重置</button>
+        <div id="status">状态：准备就绪</div>
+    </div>
+
+    <script>
+        let timeLeft = 1500; // 25分钟 = 1500秒
+        let timerId = null;
+        const timerDisplay = document.getElementById('timer');
+        const statusDisplay = document.getElementById('status');
+
+        function updateDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (timerId !== null) return; // 防止重复点击
+            statusDisplay.textContent = "状态：专注中...";
+            timerId = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateDisplay();
+                } else {
+                    clearInterval(timerId);
+                    timerId = null;
+                    timerDisplay.textContent = "00:00";
+                    statusDisplay.textContent = "状态：时间到！休息一下吧。";
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerId);
+            timerId = null;
+            timeLeft = 1500;
+            updateDisplay();
+            statusDisplay.textContent = "状态：准备就绪";
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
